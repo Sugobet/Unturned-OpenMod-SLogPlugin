@@ -21,6 +21,7 @@ using System.Runtime.Remoting.Contexts;
 using Autofac.Core;
 using OpenMod.Unturned.Vehicles;
 using UnityEngine.UIElements;
+using System.Data;
 
 namespace MyOpenModPlugin
 {
@@ -184,7 +185,28 @@ namespace MyOpenModPlugin
             int currentHealth = @event.Vehicle.Vehicle.health - @event.PendingTotalDamage;
             if (currentHealth > 0) { return; }
 
+            if (@event.Instigator == null) { return; }
+            if (!@event.Vehicle.Ownership.HasOwner) { return; }
 
+            ulong instigatorSteamID = ulong.Parse(@event.Instigator.ToString());
+            SteamPlayer insSteamPlayer = PlayerTool.getSteamPlayer(instigatorSteamID);
+            string insPlayerName = insSteamPlayer.playerID.characterName;
+            string insPlayerPos = insSteamPlayer.player.transform.position.ToString();
+            string damageOrigin = @event.DamageOrigin.ToString();
+
+            string? ownrSteamID = @event.Vehicle.Ownership.OwnerPlayerId;
+            SteamPlayer ownrPlayer = PlayerTool.getPlayer(ownrSteamID).channel.owner;
+            string ownrName = ownrPlayer.playerID.characterName;
+
+            string vehicleName = @event.Vehicle.Asset.VehicleName;
+            string vehicleType = @event.Vehicle.Asset.VehicleType;
+            string vehicleID = @event.Vehicle.Asset.VehicleAssetId;
+            string vehicleInstanceID = @event.Vehicle.VehicleInstanceId;
+            string vehicleEng = @event.Vehicle.Vehicle.asset.engine.ToString();
+        
+            string nowTime = DateTime.Now.ToString();
+
+            await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{insPlayerName} SteamID：{instigatorSteamID} 在坐标：{insPlayerPos} 击毁了 玩家：{ownrName} SteamID：{ownrSteamID} 的载具：{vehicleName} 载具类型：{vehicleType} 载具引擎：{vehicleEng} 载具ID：{vehicleID} 载具实例ID：{vehicleInstanceID} 伤害来源：{damageOrigin}");
         }
     }
 }
