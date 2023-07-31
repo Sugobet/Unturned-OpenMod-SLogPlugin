@@ -142,7 +142,7 @@ namespace MyOpenModPlugin
     public class UnturnedPlayerExitedVehicleEventListener : IEventListener<UnturnedPlayerExitedVehicleEvent>
     {
         /*
-         * 玩家进入车辆
+         * 玩家离开车辆
          */
         [EventListener()]
         public async Task HandleEventAsync(object? sender, UnturnedPlayerExitedVehicleEvent @event)
