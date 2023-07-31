@@ -44,7 +44,7 @@ namespace MyOpenModPlugin
                 Directory.CreateDirectory(dirPath);
             }
             // await UniTask.SwitchToMainThread(); uncomment if you have to access Unturned or UnityEngine APIs
-            m_Logger.LogInformation("SLog loaded    ---- author: Sugobet");
+            m_Logger.LogInformation("SLog v1.0.0 loaded    ---- author: Sugobet");
 
             // await UniTask.SwitchToThreadPool(); // you can switch back to a different thread
         }

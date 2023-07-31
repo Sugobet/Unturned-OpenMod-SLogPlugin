@@ -22,6 +22,8 @@ using Autofac.Core;
 using OpenMod.Unturned.Vehicles;
 using UnityEngine.UIElements;
 using System.Data;
+using SDG.Provider;
+using OpenMod.Unturned.Items;
 
 namespace MyOpenModPlugin
 {
@@ -78,7 +80,7 @@ namespace MyOpenModPlugin
             await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{playerName} SteamID：{playerSteamID} 在坐标：{playerPos} 丢落物品：{itemName} 物品ID：{itemID} 物品个数：{itemAmount}");
         }
     }
-
+    
     public class UnturnedPlayerTakingItemEventListener : IEventListener<UnturnedPlayerTakingItemEvent>
     {
         /*
@@ -196,8 +198,8 @@ namespace MyOpenModPlugin
             string vehicleEng = @event.Vehicle.Vehicle.asset.engine.ToString();
         
             string nowTime = DateTime.Now.ToString();
-
-            await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{insPlayerName} SteamID：{instigatorSteamID} 在坐标：{insPlayerPos} 击毁了 玩家：{lockerName} SteamID：{lockerSteamID} 的载具：{vehicleName} 载具类型：{vehicleType} 载具引擎：{vehicleEng} 载具ID：{vehicleID} 载具实例ID：{vehicleInstanceID} 伤害来源：{damageOrigin}");
+            
+            await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{insPlayerName} SteamID：{instigatorSteamID} 在坐标：{insPlayerPos} 击毁了 玩家：{lockerName} SteamID：{lockerSteamID} 上锁的载具：{vehicleName} 载具类型：{vehicleType} 载具引擎：{vehicleEng} 载具ID：{vehicleID} 载具实例ID：{vehicleInstanceID} 伤害来源：{damageOrigin}");
         }
     }
 }
