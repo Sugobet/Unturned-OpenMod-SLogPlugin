@@ -174,10 +174,6 @@ namespace MyOpenModPlugin
         public async Task HandleEventAsync(object? sender, UnturnedVehicleDamagingEvent @event)
         {
             int currentHealth = @event.Vehicle.Vehicle.health - @event.PendingTotalDamage;
-
-            Console.WriteLine(@event.Vehicle.Vehicle.health);
-            Console.WriteLine(currentHealth);
-
             if (currentHealth > 0) { return; }
 
             if (@event.Instigator == null) { return; }
