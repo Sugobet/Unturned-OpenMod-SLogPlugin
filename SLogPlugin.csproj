@@ -14,9 +14,9 @@
     <Nullable>enable</Nullable>
     <WarningsAsErrors>nullable</WarningsAsErrors>
     <NoWarn>$(NoWarn);NU1701;NU1702;CS0436</NoWarn>
-    <Version>0.1.7</Version>
-    <InformationalVersion>0.1.7</InformationalVersion>
-    <PackageVersion>0.1.7</PackageVersion>
+    <Version>0.1.9</Version>
+    <InformationalVersion>0.1.9</InformationalVersion>
+    <PackageVersion>0.1.9</PackageVersion>
   </PropertyGroup>
 
   <ItemGroup>

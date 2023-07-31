@@ -121,7 +121,7 @@ namespace MyOpenModPlugin
             UnturnedVehicle vehicle = @event.Vehicle;
             string vehicleType = vehicle.Asset.VehicleType;
             string vehicleName = vehicle.Asset.VehicleName;
-            string vehicleID = vehicle.Asset.VehicleAssetId;
+            string vehicleID = vehicle.Vehicle.id.ToString();
             string vehicleInstanceID = vehicle.VehicleInstanceId;
             string vehicleEng = vehicle.Vehicle.asset.engine.ToString();
 
@@ -155,22 +155,13 @@ namespace MyOpenModPlugin
             UnturnedVehicle vehicle = @event.Vehicle;
             string vehicleType = vehicle.Asset.VehicleType;
             string vehicleName = vehicle.Asset.VehicleName;
-            string vehicleID = vehicle.Asset.VehicleAssetId;
+            string vehicleID = vehicle.Vehicle.id.ToString();
             string vehicleInstanceID = vehicle.VehicleInstanceId;
             string vehicleEng = vehicle.Vehicle.asset.engine.ToString();
 
-            UnturnedPlayer? vehicleDriver = vehicle.Driver as UnturnedPlayer;
-            string driverName = "";
-            string driverSteamID = "";
-            if (vehicleDriver != null)
-            {
-                driverName = vehicleDriver.DamageSourceName;
-                driverSteamID = vehicleDriver.SteamId.ToString();
-            }
-
             string nowTime = DateTime.Now.ToString();
 
-            await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{playerName} SteamID：{playerSteamID} 在坐标：{playerPos} 离开了车辆：{vehicleName} 车辆类型：{vehicleType} 车辆引擎：{vehicleEng} 车辆ID：{vehicleID} 车辆实例ID：{vehicleInstanceID} 司机：{driverName} 司机SteamID：{driverSteamID}");
+            await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{playerName} SteamID：{playerSteamID} 在坐标：{playerPos} 离开了车辆：{vehicleName} 车辆类型：{vehicleType} 车辆引擎：{vehicleEng} 车辆ID：{vehicleID} 车辆实例ID：{vehicleInstanceID}");
         }
     }
 
@@ -183,10 +174,14 @@ namespace MyOpenModPlugin
         public async Task HandleEventAsync(object? sender, UnturnedVehicleDamagingEvent @event)
         {
             int currentHealth = @event.Vehicle.Vehicle.health - @event.PendingTotalDamage;
+
+            Console.WriteLine(@event.Vehicle.Vehicle.health);
+            Console.WriteLine(currentHealth);
+
             if (currentHealth > 0) { return; }
 
             if (@event.Instigator == null) { return; }
-            if (!@event.Vehicle.Ownership.HasOwner) { return; }
+            if (!@event.Vehicle.Vehicle.isLocked) { return; }
 
             ulong instigatorSteamID = ulong.Parse(@event.Instigator.ToString());
             SteamPlayer insSteamPlayer = PlayerTool.getSteamPlayer(instigatorSteamID);
@@ -194,19 +189,19 @@ namespace MyOpenModPlugin
             string insPlayerPos = insSteamPlayer.player.transform.position.ToString();
             string damageOrigin = @event.DamageOrigin.ToString();
 
-            string? ownrSteamID = @event.Vehicle.Ownership.OwnerPlayerId;
-            SteamPlayer ownrPlayer = PlayerTool.getPlayer(ownrSteamID).channel.owner;
-            string ownrName = ownrPlayer.playerID.characterName;
+            CSteamID lockerSteamID = @event.Vehicle.Vehicle.lockedOwner;
+            SteamPlayer lockerPlayer = PlayerTool.getPlayer(lockerSteamID).channel.owner;
+            string lockerName = lockerPlayer.playerID.characterName;
 
             string vehicleName = @event.Vehicle.Asset.VehicleName;
             string vehicleType = @event.Vehicle.Asset.VehicleType;
-            string vehicleID = @event.Vehicle.Asset.VehicleAssetId;
+            string vehicleID = @event.Vehicle.Vehicle.id.ToString();
             string vehicleInstanceID = @event.Vehicle.VehicleInstanceId;
             string vehicleEng = @event.Vehicle.Vehicle.asset.engine.ToString();
         
             string nowTime = DateTime.Now.ToString();
 
-            await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{insPlayerName} SteamID：{instigatorSteamID} 在坐标：{insPlayerPos} 击毁了 玩家：{ownrName} SteamID：{ownrSteamID} 的载具：{vehicleName} 载具类型：{vehicleType} 载具引擎：{vehicleEng} 载具ID：{vehicleID} 载具实例ID：{vehicleInstanceID} 伤害来源：{damageOrigin}");
+            await FileCTL.AppendAllTextAsync($"{nowTime} - 玩家：{insPlayerName} SteamID：{instigatorSteamID} 在坐标：{insPlayerPos} 击毁了 玩家：{lockerName} SteamID：{lockerSteamID} 的载具：{vehicleName} 载具类型：{vehicleType} 载具引擎：{vehicleEng} 载具ID：{vehicleID} 载具实例ID：{vehicleInstanceID} 伤害来源：{damageOrigin}");
         }
     }
 }
